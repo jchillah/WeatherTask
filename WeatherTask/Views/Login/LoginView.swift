@@ -58,7 +58,7 @@ struct LoginView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(viewModel.isLoginButtonEnabled ? Color.blue : Color.gray)
+                        .background(viewModel.loginButtonBackgroundColor)
                         .cornerRadius(8)
                 }
                 .disabled(!viewModel.isLoginButtonEnabled)
@@ -70,6 +70,7 @@ struct LoginView: View {
                     .foregroundColor(.blue)
             }
             .padding()
+            .navigationBarBackButtonHidden()
         }
     }
 }

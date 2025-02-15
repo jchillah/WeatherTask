@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import Combine
 
 @MainActor
 class RegistrationViewModel: ObservableObject {
@@ -18,26 +19,22 @@ class RegistrationViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isRegistered: Bool = false
 
-    private let errorHandler = ErrorHandler()
-
     var isRegisterButtonEnabled: Bool {
         !email.isEmpty && !password.isEmpty && !confirmPassword.isEmpty
+    }
+    
+    var registerButtonBackgroundColor: Color {
+        isRegisterButtonEnabled ? .blue : .gray
     }
 
     func register() {
         guard isRegisterButtonEnabled else {
-            errorMessage = "Bitte fülle alle Felder aus."
-            return
-        }
-
-        guard isValidEmail(email) else {
-            errorHandler.handle(error: AuthError.invalidEmail)
-            errorMessage = errorHandler.errorMessage
+            errorMessage = "Please fill in all fields."
             return
         }
 
         guard password == confirmPassword else {
-            errorMessage = "Passwörter stimmen nicht überein."
+            errorMessage = "Passwords do not match."
             return
         }
 
@@ -47,8 +44,7 @@ class RegistrationViewModel: ObservableObject {
                 isRegistered = true
                 errorMessage = nil
             } catch {
-                errorHandler.handle(error: error)
-                errorMessage = errorHandler.errorMessage
+                errorMessage = error.localizedDescription
             }
         }
     }

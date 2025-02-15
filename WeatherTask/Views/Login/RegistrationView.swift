@@ -67,7 +67,7 @@ struct RegistrationView: View {
                 }
             }
             .padding()
-            .navigationTitle("Register")
+            .navigationBarBackButtonHidden()
         }
     }
 }

@@ -5,7 +5,7 @@
 //  Created by Michael Winkler on 14.02.25.
 //
 
-import Foundation
+import SwiftUI
 
 @MainActor
 class LoginViewModel: ObservableObject {
@@ -19,6 +19,10 @@ class LoginViewModel: ObservableObject {
 
     var isLoginButtonEnabled: Bool {
         !email.isEmpty && !password.isEmpty
+    }
+    
+    var loginButtonBackgroundColor: Color {
+        isLoginButtonEnabled ? .blue : .gray
     }
 
     func login() {
