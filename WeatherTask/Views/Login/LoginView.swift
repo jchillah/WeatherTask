@@ -66,7 +66,6 @@ struct LoginView: View {
                     Text("MainView")
                 }
 
-                // Korrektur: RegistrationView statt Text
                 NavigationLink("Registrieren", destination: RegistrationView())
                     .foregroundColor(.blue)
             }

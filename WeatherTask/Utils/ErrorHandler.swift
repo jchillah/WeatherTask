@@ -11,7 +11,9 @@ class ErrorHandler: ObservableObject {
     @Published var errorMessage: String?
 
     func handle(error: Error) {
-        if let localizedError = error as? LocalizedError, let description = localizedError.errorDescription {
+        if let authError = error as? AuthError {
+            errorMessage = authError.errorDescription
+        } else if let localizedError = error as? LocalizedError, let description = localizedError.errorDescription {
             errorMessage = description
         } else {
             errorMessage = "Ein unbekannter Fehler ist aufgetreten."
@@ -23,17 +25,28 @@ class ErrorHandler: ObservableObject {
     }
 }
 
-
-enum LoginError: Error, LocalizedError {
+enum AuthError: Error, LocalizedError {
     case invalidEmail
     case incorrectCredentials
+    case weakPassword
+    case emailAlreadyInUse
+    case networkError
+    case unknownError
 
     var errorDescription: String? {
         switch self {
         case .invalidEmail:
-            return "Bitte tragen Sie eine gültige E-Mail ein."
+            return "Bitte geben Sie eine gültige E-Mail-Adresse ein."
         case .incorrectCredentials:
-            return "Login fehlgeschlagen. Bitte überprüfen Sie die E-Mail oder das Passwort."
+            return "Login fehlgeschlagen. Überprüfen Sie Ihre E-Mail und Ihr Passwort."
+        case .weakPassword:
+            return "Das Passwort ist zu schwach. Bitte verwenden Sie ein stärkeres Passwort."
+        case .emailAlreadyInUse:
+            return "Diese E-Mail-Adresse wird bereits verwendet."
+        case .networkError:
+            return "Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung."
+        case .unknownError:
+            return "Ein unbekannter Fehler ist aufgetreten."
         }
     }
 }

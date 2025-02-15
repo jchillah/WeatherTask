@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@MainActor
 class RegistrationViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
@@ -16,6 +17,8 @@ class RegistrationViewModel: ObservableObject {
     @Published var isConfirmPasswordVisible: Bool = false
     @Published var errorMessage: String?
     @Published var isRegistered: Bool = false
+
+    private let errorHandler = ErrorHandler()
 
     var isRegisterButtonEnabled: Bool {
         !email.isEmpty && !password.isEmpty && !confirmPassword.isEmpty
@@ -28,7 +31,8 @@ class RegistrationViewModel: ObservableObject {
         }
 
         guard isValidEmail(email) else {
-            errorMessage = "Bitte gib eine gültige E-Mail-Adresse ein."
+            errorHandler.handle(error: AuthError.invalidEmail)
+            errorMessage = errorHandler.errorMessage
             return
         }
 
@@ -37,10 +41,16 @@ class RegistrationViewModel: ObservableObject {
             return
         }
 
-        // TODO: Registrierung implementieren (z. B. API-Call)
-        print("User registriert: \(email)")
-        isRegistered = true
-        errorMessage = nil
+        Task {
+            do {
+                try await AuthManager.shared.signUp(email: email, password: password)
+                isRegistered = true
+                errorMessage = nil
+            } catch {
+                errorHandler.handle(error: error)
+                errorMessage = errorHandler.errorMessage
+            }
+        }
     }
 
     private func isValidEmail(_ email: String) -> Bool {
