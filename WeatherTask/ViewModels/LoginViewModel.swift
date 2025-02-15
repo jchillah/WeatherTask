@@ -5,8 +5,9 @@
 //  Created by Michael Winkler on 14.02.25.
 //
 
-import Foundation
+import SwiftUI
 
+@MainActor
 class LoginViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
@@ -14,24 +15,32 @@ class LoginViewModel: ObservableObject {
     @Published var isLoggedIn: Bool = false
     @Published var errorMessage: String?
 
-    var errorHandler = ErrorHandler()
+    private let errorHandler = ErrorHandler()
 
     var isLoginButtonEnabled: Bool {
         !email.isEmpty && !password.isEmpty
     }
+    
+    var loginButtonBackgroundColor: Color {
+        isLoginButtonEnabled ? .blue : .gray
+    }
 
     func login() {
         guard isValidEmail(email) else {
-            errorHandler.handle(error: LoginError.invalidEmail)
+            errorHandler.handle(error: AuthError.invalidEmail)
             errorMessage = errorHandler.errorMessage
             return
         }
 
-        if email == "test@example.com" && password == "password123" {
-            isLoggedIn = true
-        } else {
-            errorHandler.handle(error: LoginError.incorrectCredentials)
-            errorMessage = errorHandler.errorMessage
+        Task {
+            do {
+                try await AuthManager.shared.signIn(email: email, password: password)
+                isLoggedIn = true
+                errorMessage = nil
+            } catch {
+                errorHandler.handle(error: error)
+                errorMessage = errorHandler.errorMessage
+            }
         }
     }
 
