@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Combine
+import os
 
 @MainActor
 class RegistrationViewModel: ObservableObject {
@@ -20,6 +21,7 @@ class RegistrationViewModel: ObservableObject {
     @Published var isRegistered: Bool = false
 
     private let authManager = AuthManager.shared
+    private let logger = Logger(subsystem: "com.weathertask.app", category: "RegistrationViewModel")
     
     var isRegisterButtonEnabled: Bool {
         !email.isEmpty && !password.isEmpty && !confirmPassword.isEmpty
@@ -46,8 +48,11 @@ class RegistrationViewModel: ObservableObject {
                 try await authManager.signUp(email: email, password: password)
                 isRegistered = true
                 errorMessage = nil
+                logger.info("User successfully registered with email: \(self.email)")
             } catch {
-                errorMessage = handleAuthError(error)
+                let errorMsg = handleAuthError(error)
+                errorMessage = errorMsg
+                logger.error("Registration failed: \(errorMsg)")
             }
         }
     }
