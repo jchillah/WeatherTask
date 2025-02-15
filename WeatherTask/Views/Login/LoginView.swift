@@ -37,9 +37,7 @@ struct LoginView: View {
                     Button(action: {
                         viewModel.isPasswordVisible.toggle()
                     }) {
-                        Image(systemName: 
-                                viewModel.isPasswordVisible 
-                              ? "eye" : "eye.slash")
+                        Image(systemName: viewModel.isPasswordVisible ? "eye" : "eye.slash")
                             .foregroundColor(.gray)
                     }
                 }
@@ -60,17 +58,16 @@ struct LoginView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(
-                            viewModel.isLoginButtonEnabled 
-                            ? Color.blue : Color.gray)
+                        .background(viewModel.isLoginButtonEnabled ? Color.blue : Color.gray)
                         .cornerRadius(8)
                 }
                 .disabled(!viewModel.isLoginButtonEnabled)
                 .navigationDestination(isPresented: $viewModel.isLoggedIn) {
-                    Text("Hauptansicht")
+                    Text("MainView")
                 }
-                NavigationLink("Registrieren", 
-                               destination: Text("Registrierungsansicht"))
+
+                // Korrektur: RegistrationView statt Text
+                NavigationLink("Registrieren", destination: RegistrationView())
                     .foregroundColor(.blue)
             }
             .padding()
