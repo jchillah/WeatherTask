@@ -67,3 +67,4 @@ fastlane/test_output
 *.xcworkspace/xcuserdata/
 *.xcsettings
 
+GoogleService-Info.plist
