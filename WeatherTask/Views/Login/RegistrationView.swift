@@ -13,7 +13,7 @@ struct RegistrationView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                Text("Registrierung")
+                Text("Register")
                     .font(.largeTitle)
                     .bold()
 
@@ -27,7 +27,7 @@ struct RegistrationView: View {
                 .autocapitalization(.none)
 
                 CustomTextField(
-                    placeholder: "Passwort",
+                    placeholder: "Password",
                     text: $viewModel.password,
                     isSecure: true,
                     showToggle: true,
@@ -35,7 +35,7 @@ struct RegistrationView: View {
                 )
 
                 CustomTextField(
-                    placeholder: "Passwort bestätigen",
+                    placeholder: "Confirm Password",
                     text: $viewModel.confirmPassword,
                     isSecure: true,
                     showToggle: true,
@@ -51,7 +51,7 @@ struct RegistrationView: View {
                 Button(action: {
                     viewModel.register()
                 }) {
-                    Text("Registrieren")
+                    Text("Register")
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -62,12 +62,12 @@ struct RegistrationView: View {
                 .padding(.top, 10)
 
                 NavigationLink(destination: LoginView()) {
-                    Text("Zurück zum Login")
+                    Text("Back to Login")
                         .foregroundColor(.blue)
                 }
             }
             .padding()
-            .navigationTitle("Registrieren")
+            .navigationTitle("Register")
         }
     }
 }

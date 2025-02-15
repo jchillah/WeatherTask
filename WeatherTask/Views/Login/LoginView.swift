@@ -26,11 +26,11 @@ struct LoginView: View {
 
                 HStack {
                     if viewModel.isPasswordVisible {
-                        TextField("Passwort", text: $viewModel.password)
+                        TextField("Password", text: $viewModel.password)
                             .autocapitalization(.none)
                             .disableAutocorrection(true)
                     } else {
-                        SecureField("Passwort", text: $viewModel.password)
+                        SecureField("Password", text: $viewModel.password)
                             .textContentType(.password)
                     }
 
@@ -54,7 +54,7 @@ struct LoginView: View {
                 Button(action: {
                     viewModel.login()
                 }) {
-                    Text("Anmelden")
+                    Text("Login")
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -66,7 +66,7 @@ struct LoginView: View {
                     Text("MainView")
                 }
 
-                NavigationLink("Registrieren", destination: RegistrationView())
+                NavigationLink("Register", destination: RegistrationView())
                     .foregroundColor(.blue)
             }
             .padding()
