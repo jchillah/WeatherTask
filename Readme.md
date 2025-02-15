@@ -10,7 +10,8 @@ WeatherTask hilft dir, deine Aufgaben intelligent zu planen. Ob Grillabend, Schw
 
 ## 🌄 Screenshots
 
-(Platz für Screenshots der App)
+![LoginView/LoginViewModel KlassenDiagramm](./screenshots/KlassenDiagrammLoginView.png)
+
 
 ## 🔄 Installation
 
