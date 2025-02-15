@@ -7,6 +7,7 @@
 
 import FirebaseAuth
 
+@MainActor
 final class AuthManager {
     static let shared = AuthManager()
 
@@ -27,38 +28,36 @@ final class AuthManager {
     func signUp(email: String, password: String) async throws {
         do {
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
-            #if DEBUG
-            print("User registered: \(result.user.uid)")
-            #endif
-        } catch let error as NSError {
-            throw mapFirebaseAuthError(error)
+            log("User registered: \(result.user.uid)")
+        } catch {
+            throw handleFirebaseError(error)
         }
     }
 
     func signIn(email: String, password: String) async throws {
         do {
             let result = try await Auth.auth().signIn(withEmail: email, password: password)
-            #if DEBUG
-            print("User signed in: \(result.user.uid)")
-            #endif
-        } catch let error as NSError {
-            throw mapFirebaseAuthError(error)
+            log("User signed in: \(result.user.uid)")
+        } catch {
+            throw handleFirebaseError(error)
         }
     }
 
     func signOut() throws {
         do {
             try Auth.auth().signOut()
-            #if DEBUG
-            print("User signed out")
-            #endif
+            log("User signed out")
         } catch {
             throw AuthError.unknownError
         }
     }
 
-    private func mapFirebaseAuthError(_ error: NSError) -> AuthError {
-        switch error.code {
+    private func handleFirebaseError(_ error: Error) -> AuthError {
+        guard let errorCode = (error as NSError?)?.code else {
+            return .unknownError
+        }
+
+        switch errorCode {
         case AuthErrorCode.invalidEmail.rawValue:
             return .invalidEmail
         case AuthErrorCode.emailAlreadyInUse.rawValue:
@@ -72,5 +71,11 @@ final class AuthManager {
         default:
             return .unknownError
         }
+    }
+
+    private func log(_ message: String) {
+        #if DEBUG
+        print("[AuthManager] \(message)")
+        #endif
     }
 }
