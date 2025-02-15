@@ -48,7 +48,7 @@ class RegistrationViewModel: ObservableObject {
                 try await authManager.signUp(email: email, password: password)
                 isRegistered = true
                 errorMessage = nil
-                logger.info("User successfully registered with email: \(self.email)")
+                logger.info("User successfully registered")
             } catch {
                 let errorMsg = handleAuthError(error)
                 errorMessage = errorMsg
