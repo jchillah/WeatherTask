@@ -8,9 +8,15 @@
 import SwiftUI
 
 struct MainView: View {
+    @StateObject private var weatherViewModel = WeatherViewModel()
+
     var body: some View {
         NavigationStack {
             VStack {
+                Text("Current Temperature: \(weatherViewModel.temperature)")
+                    .font(.headline)
+                    .padding()
+
                 List {
                     Text("Task 1")
                     Text("Task 2")
@@ -25,6 +31,9 @@ struct MainView: View {
                         Image(systemName: "plus")
                     }
                 }
+            }
+            .onAppear {
+                weatherViewModel.fetchWeather()
             }
         }
     }
