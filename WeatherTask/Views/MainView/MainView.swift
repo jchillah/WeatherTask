@@ -33,7 +33,9 @@ struct MainView: View {
                 }
             }
             .onAppear {
-                weatherViewModel.fetchWeather()
+                Task {
+                    await weatherViewModel.fetchWeather()
+                }
             }
         }
     }

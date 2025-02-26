@@ -49,7 +49,14 @@ struct RegistrationView: View {
                 }
 
                 Button(action: {
-                    viewModel.register()
+                    Task {
+                        do {
+                            try await viewModel.register()
+                            viewModel.isRegistrationSuccessful = true // Erfolgreiche Registrierung setzen
+                        } catch {
+                            viewModel.errorMessage = "Registration failed: \(error.localizedDescription)"
+                        }
+                    }
                 }) {
                     Text("Register")
                         .foregroundColor(.white)
@@ -60,6 +67,9 @@ struct RegistrationView: View {
                 }
                 .disabled(!viewModel.isRegisterButtonEnabled)
                 .padding(.top, 10)
+                // Navigation zur SuccessView bei erfolgreicher Registrierung
+                .navigationDestination(isPresented: $viewModel.isRegistrationSuccessful) {
+                    SuccessView(successMessage: "Registration erfolgreich!")}
 
                 NavigationLink(destination: LoginView()) {
                     Text("Back to Login")

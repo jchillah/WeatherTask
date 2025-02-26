@@ -7,10 +7,7 @@
 
 import Foundation
 
-struct Weather: Decodable {
-    let temperature: Double
-}
-
+@MainActor
 class WeatherService {
     func getWeather() async throws -> Weather {
         // Hier kannst du die API-Anfrage implementieren

@@ -12,10 +12,25 @@ class LoginViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var isPasswordVisible: Bool = false
-    @Published var isLoggedIn: Bool = false
+    @Published var isSignedIn: Bool = false
     @Published var errorMessage: String?
+    @Published var navigateToMainTabView = false
+    @Published var user: User?
+    @Published var isLoginSuccessful = false
 
+    
+    private let userRepository = UserRepository()
     private let errorHandler = ErrorHandler()
+    
+    
+    init() {
+        _ = AuthManager.shared
+        fetchCurrentUser()
+    }
+    
+    var isUserSignedIn: Bool {
+        AuthManager.shared.isUserSignedIn
+    }
 
     var isLoginButtonEnabled: Bool {
         !email.isEmpty && !password.isEmpty
@@ -24,28 +39,52 @@ class LoginViewModel: ObservableObject {
     var loginButtonBackgroundColor: Color {
         isLoginButtonEnabled ? .blue : .gray
     }
-
-    func login() {
-        guard isValidEmail(email) else {
-            errorHandler.handle(error: AuthError.invalidEmail)
-            errorMessage = errorHandler.errorMessage
-            return
-        }
-
+        
+    private func fetchCurrentUser() {
         Task {
             do {
-                try await AuthManager.shared.signIn(email: email, password: password)
-                isLoggedIn = true
-                errorMessage = nil
+                if let userID = AuthManager.shared.userID {
+                    user = try await userRepository.find(by: userID)
+                }
             } catch {
-                errorHandler.handle(error: error)
-                errorMessage = errorHandler.errorMessage
+                errorMessage = "The user is not signed in."
+            }
+        }
+    }
+    
+    func signIn() async throws {
+        guard EmailValidator.isValid(email) else {
+            errorHandler.handle(error: AuthError.invalidEmail)
+            DispatchQueue.main.async {
+                self.errorMessage = self.errorHandler.errorMessage
+            }
+            return
+        }
+        
+        do {
+            try await AuthManager.shared.signIn(email: email, password: password)
+            let userID = AuthManager.shared.userID!
+            let fetchedUser = try await userRepository.find(by: userID)
+            
+            DispatchQueue.main.async {
+                self.user = fetchedUser
+                self.isSignedIn = true
+                self.errorMessage = nil
+                self.navigateToMainTabView = true
+            }
+        } catch {
+            errorHandler.handle(error: error)
+            DispatchQueue.main.async {
+                self.errorMessage = error.localizedDescription
             }
         }
     }
 
-    private func isValidEmail(_ email: String) -> Bool {
-        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-        return NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: email)
+
+    func signOut() {
+        Task {
+            try? AuthManager.shared.signOut()
+            user = nil
+        }
     }
 }

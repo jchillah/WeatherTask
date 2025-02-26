@@ -14,11 +14,10 @@ class WeatherViewModel: ObservableObject {
     
     private let weatherService = WeatherService()
 
-    func fetchWeather() {
-        Task {
+    func fetchWeather() async {
             if let weather = try? await weatherService.getWeather() {
                 self.temperature = "\(Int(weather.temperature))°C"
-            }
+            
         }
     }
 }
