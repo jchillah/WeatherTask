@@ -11,9 +11,11 @@ WeatherTask hilft dir, deine Aufgaben intelligent zu planen. Ob Grillabend, Schw
 ## 🌄 Screenshots
 
 ![LoginView/LoginViewModel Class Diagramm](./Screenshots/KlassenDiagrammLoginView.png)
-![AuthManager Class Ddiagramm](./Screenshots/KlassenDiagrammAuthManager.png)
+![AuthManager Class Diagramm](./Screenshots/KlassenDiagrammAuthManager.png)
 ![RegistrationView/RegistrationViewModel Class Diagramm](./Screenshots/KlassenDiagrammRegistrationView.png)
 ![User Registration Sequence Diagramm](./Screenshots/SequenzDiagramUserRegistration.png)
+![User Login Sequence Diagramm](./Screenshots/SequenzDiagrammUserLogin.png)
+![UserRepository Class Diagramm](./Screenshots/KlassenDiagrammUserRepo.png)
 
 
 ## 🔄 Installation
