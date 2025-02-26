@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class ErrorHandler: ObservableObject {
     @Published var errorMessage: String?
 
