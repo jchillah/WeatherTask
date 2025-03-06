@@ -23,9 +23,7 @@ struct MainTabView: View {
                 tabTitle: "Settings", 
                 tabImage: "gearshape.fill"
             ) {
-                Button(action: viewModel.signOut) {
-                    Text("Sign out")
-                }
+                SettingsView()
             }
         }
         .navigationBarBackButtonHidden()

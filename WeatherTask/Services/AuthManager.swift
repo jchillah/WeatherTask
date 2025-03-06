@@ -8,7 +8,7 @@
 import FirebaseAuth
 
 @MainActor
-final class AuthManager {
+final class AuthManager: ObservableObject {
     static let shared = AuthManager()
 
     private init() {}

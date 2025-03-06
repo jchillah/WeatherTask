@@ -31,10 +31,11 @@ class LoginViewModel: ObservableObject {
     var isUserSignedIn: Bool {
         AuthManager.shared.isUserSignedIn
     }
- 
-    var signInSuccesful: Bool {
+
+    var isAlrdySignedIn: Bool {
         isLoginSuccessful == isUserSignedIn
     }
+
     var isLoginButtonEnabled: Bool {
         !email.isEmpty && !password.isEmpty
     }
@@ -58,9 +59,7 @@ class LoginViewModel: ObservableObject {
     func signIn() async throws {
         guard EmailValidator.isValid(email) else {
             errorHandler.handle(error: AuthError.invalidEmail)
-            DispatchQueue.main.async {
                 self.errorMessage = self.errorHandler.errorMessage
-            }
             return
         }
         
@@ -69,16 +68,14 @@ class LoginViewModel: ObservableObject {
             let userID = AuthManager.shared.userID!
             let fetchedUser = try await userRepository.find(by: userID)
             
-            DispatchQueue.main.async {
                 self.user = fetchedUser
                 self.isSignedIn = true
                 self.errorMessage = nil
-            }
+                self.isLoginSuccessful = true
+            
         } catch {
             errorHandler.handle(error: error)
-            DispatchQueue.main.async {
                 self.errorMessage = error.localizedDescription
-            }
         }
     }
 
@@ -86,6 +83,7 @@ class LoginViewModel: ObservableObject {
     func signOut() {
         Task {
             try? AuthManager.shared.signOut()
+            isSignedIn = false
             user = nil
         }
     }
