@@ -16,7 +16,7 @@ struct MainTabView: View {
                 tabTitle: "Home", 
                 tabImage: "house.fill"
             ) {
-                MainView()
+                MainView(viewModel: TaskViewModel())
             }
             
             TabViewItem(
