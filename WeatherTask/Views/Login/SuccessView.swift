@@ -17,10 +17,12 @@ struct SuccessView: View {
                 .scaledToFit()
                 .frame(width: 100, height: 100)
                 .foregroundColor(.green)
+                .multilineTextAlignment(.center)
 
             Text(successMessage)
                 .font(.title)
                 .bold()
+                .multilineTextAlignment(.center)
 
             Text("Du kannst jetzt loslegen.")
                 .multilineTextAlignment(.center)
