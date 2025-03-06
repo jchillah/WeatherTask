@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var weatherViewModel = WeatherViewModel()
+    @StateObject var viewModel: TaskViewModel
+    @State private var isAddTaskSheetPresented = false
 
     var body: some View {
         NavigationStack {
@@ -16,25 +18,40 @@ struct MainView: View {
                 Text("Current Temperature: \(weatherViewModel.temperature)")
                     .font(.headline)
                     .padding()
-
+                
                 List {
-                    Text("Task 1")
-                    Text("Task 2")
-                    Text("Task 3")
-                }
-                .listStyle(.insetGrouped)
-            }
-            .navigationTitle("Tasks")
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button(action: {}) {
-                        Image(systemName: "plus")
+                    ForEach(viewModel.tasks) { task in
+                        NavigationLink(destination: TaskDetailView(task: task)) {
+                            Text(task.title)
+                        }
+                    }
+                    .onDelete { indexSet in
+                        indexSet.forEach { index in
+                            Task {
+                                await viewModel.deleteTask(viewModel.tasks[index])
+                            }
+                        }
                     }
                 }
-            }
-            .onAppear {
-                Task {
-                    await weatherViewModel.fetchWeather()
+                .listStyle(.insetGrouped)
+                .navigationTitle("Tasks")
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button(action: {
+                            isAddTaskSheetPresented = true
+                        }) {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
+                .sheet(isPresented: $isAddTaskSheetPresented) {
+                    AddTaskView(viewModel: TaskViewModel())
+                }
+                .onAppear {
+                    Task {
+                        await viewModel.loadTasks()
+                        await weatherViewModel.fetchWeather()
+                    }
                 }
             }
         }
@@ -42,5 +59,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    MainView(viewModel: TaskViewModel())
 }
