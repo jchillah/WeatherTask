@@ -31,7 +31,10 @@ class LoginViewModel: ObservableObject {
     var isUserSignedIn: Bool {
         AuthManager.shared.isUserSignedIn
     }
-
+ 
+    var signInSuccesful: Bool {
+        isLoginSuccessful == isUserSignedIn
+    }
     var isLoginButtonEnabled: Bool {
         !email.isEmpty && !password.isEmpty
     }
@@ -70,7 +73,6 @@ class LoginViewModel: ObservableObject {
                 self.user = fetchedUser
                 self.isSignedIn = true
                 self.errorMessage = nil
-                self.navigateToMainTabView = true
             }
         } catch {
             errorHandler.handle(error: error)

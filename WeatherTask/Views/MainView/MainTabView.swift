@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @StateObject private var viewModel = LoginViewModel()
+    
     var body: some View {
         TabView {
             TabViewItem(
@@ -21,9 +23,9 @@ struct MainTabView: View {
                 tabTitle: "Settings", 
                 tabImage: "gearshape.fill"
             ) {
-                Text("Settings View Content")
-                    .font(.largeTitle)
-                    .padding()
+                Button(action: viewModel.signOut) {
+                    Text("Sign out")
+                }
             }
         }
         .navigationBarBackButtonHidden()

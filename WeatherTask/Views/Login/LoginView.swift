@@ -17,9 +17,9 @@ struct LoginView: View {
                     .font(.largeTitle)
                     .bold()
 
-                if viewModel.isUserSignedIn {
+                if viewModel.isUserSignedIn && !viewModel.isLoginSuccessful {
                     // Bereits eingeloggt Meldung + Navigation
-                    AlrdySignedIn()
+                    SuccessView(successMessage: "Sie sind bereits eingeloggt!")
                 } else {
                     // Login-Formular anzeigen, wenn nicht eingeloggt
                     TextField("E-Mail", text: $viewModel.email)
