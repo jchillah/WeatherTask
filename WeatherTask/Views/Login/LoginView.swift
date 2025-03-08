@@ -60,7 +60,6 @@ struct LoginView: View {
                         Task {
                             do {
                                 try await viewModel.signIn()
-                                viewModel.isLoginSuccessful = true // Erfolgreicher Login -> Navigation zur SuccessView
                             } catch {
                                 viewModel.errorMessage = "Login fehlgeschlagen: \(error.localizedDescription)"
                             }
